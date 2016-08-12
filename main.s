@@ -12,7 +12,7 @@ main:
 	# use r15 for counter
 	xorq 	%r15, %r15
 	# run to 15
-	movq 	$15, %r12
+	movq 	$100, %r12
 
 
 loop:	
