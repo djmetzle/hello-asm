@@ -6,6 +6,16 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
+	call func
+
+	popq	%rbp
+	ret
+	.size	main, .-main
+
+func:
+        pushq   %rbp
+        movq    %rsp, %rbp
+
 	# hello print	
 	movq	$1, %rax
 	movq	$1, %rdi
@@ -13,13 +23,16 @@ main:
 	movq	$len, %rdx
 	syscall
 
-	popq	%rbp
-	ret
-	.size	main, .-main
-	.ident	"GCC: (GNU) 5.3.1 20160406 (Red Hat 5.3.1-6)"
-	.section	.note.GNU-stack,"",@progbits
+        popq    %rbp
+        ret
+        .size   func, .-func
+        .globl  main
+        .type   main, @function
+
 
 	.data
+
 hello_msg:
 	.ascii	"Hello Assembler\n"	
 	len = . - hello_msg
+
