@@ -7,21 +7,54 @@ main:
 	pushq	%rbp
 	movq	%rsp, %rbp
 
-	call print_hello
+	call 	print_hello
 
-	# use r10 for counter, init to 1
-	movq $0x1, %r10	
+	# use r15 for counter
+	xorq 	%r15, %r15
+	# run to 15
+	movq 	$15, %r12
 
-	call print_fizz
-	call print_nl
-	call print_buzz
-	call print_nl
-	call print_fizz
-	call print_buzz
-	call print_nl
 
-	call print_number
+loop:	
+	inc 	%r15
+	movq	%r15, %r11
 
+	# compare mod 3
+testthree:
+	xor 	%rdx, %rdx
+	movq 	%r15, %rax
+	movq 	$0x3, %r13
+	div 	%r13
+	movq	%rdx, %r14
+	cmpq 	$0, %rdx
+	jne 	testfive
+	call 	print_fizz
+
+testfive:
+	xor 	%rdx, %rdx
+	movq 	%r15, %rax
+	movq 	$0x5, %r13
+	div 	%r13
+	cmpq 	$0, %rdx
+	jne 	failed
+	call 	print_buzz
+	call	print_nl
+	jmp	end_loop
+
+failed:
+	cmpq	$0, %r14
+	jne	neither
+	call	print_nl
+	jmp	end_loop
+	
+
+neither:
+	movq	%r15, %r11
+	call 	print_number
+
+end_loop:
+	cmp 	%r12, %r15
+	jl 	loop
 
 	popq	%rbp
 	ret
@@ -96,11 +129,12 @@ print_nl:
         .type   main, @function
 
 print_number:
+
         pushq   %rbp
         movq    %rsp, %rbp
 
 	# hello print	
-	movq %r10, %rsi
+	movq %r11, %rsi
 	movq $number_format, %rdi
 	call printf
 
@@ -109,6 +143,7 @@ print_number:
         .size   print_number, . - print_number
         .globl  main
         .type   main, @function
+
 
 	.data
 
