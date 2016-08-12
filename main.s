@@ -7,8 +7,17 @@ main:
 	movq	%rsp, %rbp
 
 	call print_hello
+
+	# use r10 for counter, init to 1
+	movq $0x1, %r10	
+
+	call print_fizz
+	call print_nl
+	call print_buzz
+	call print_nl
 	call print_fizz
 	call print_buzz
+	call print_nl
 
 	popq	%rbp
 	ret
@@ -65,6 +74,24 @@ print_buzz:
         .globl  main
         .type   main, @function
 
+print_nl:
+        pushq   %rbp
+        movq    %rsp, %rbp
+
+	# hello print	
+	movq	$1, %rax
+	movq	$1, %rdi
+	movq	$nl_msg, %rsi
+	movq	$nl_len, %rdx
+	syscall
+
+        popq    %rbp
+        ret
+        .size   print_nl, . - print_nl
+        .globl  main
+        .type   main, @function
+
+
 	.data
 
 hello_msg:
@@ -72,10 +99,13 @@ hello_msg:
 	hello_len = . - hello_msg
 
 fizz_msg:
-	.ascii	"Fizz\n"	
+	.ascii	"Fizz"	
 	fizz_len = . - fizz_msg
 
 buzz_msg:
-	.ascii	"Buzz\n"	
+	.ascii	"Buzz"	
 	buzz_len = . - buzz_msg
 
+nl_msg:
+	.ascii	"\n"	
+	nl_len = . - nl_msg
