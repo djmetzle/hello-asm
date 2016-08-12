@@ -2,6 +2,7 @@
 	.text
 	.globl	main
 	.type	main, @function
+	.extern printf
 main:
 	pushq	%rbp
 	movq	%rsp, %rbp
@@ -18,6 +19,9 @@ main:
 	call print_fizz
 	call print_buzz
 	call print_nl
+
+	call print_number
+
 
 	popq	%rbp
 	ret
@@ -91,6 +95,20 @@ print_nl:
         .globl  main
         .type   main, @function
 
+print_number:
+        pushq   %rbp
+        movq    %rsp, %rbp
+
+	# hello print	
+	movq %r10, %rsi
+	movq $number_format, %rdi
+	call printf
+
+        popq    %rbp
+        ret
+        .size   print_number, . - print_number
+        .globl  main
+        .type   main, @function
 
 	.data
 
@@ -109,3 +127,6 @@ buzz_msg:
 nl_msg:
 	.ascii	"\n"	
 	nl_len = . - nl_msg
+
+number_format:
+	.asciz "%d\n"
